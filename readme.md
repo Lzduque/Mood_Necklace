@@ -12,3 +12,9 @@ https://github.com/FastLED/FastLED/wiki/Rgb-calibration
 
 - Base to set the color and temperature:
 https://www.philophrosyne.com/blogs/jewelry-guide/what-do-the-colors-of-a-mood-ring-mean
+
+- HSV cnverter to RGB formula:
+https://www.rapidtables.com/convert/color/hsv-to-rgb.html
+
+- Adafruit docs:
+https://github.com/adafruit/Adafruit_NeoPixel/blob/master/Adafruit_NeoPixel.h

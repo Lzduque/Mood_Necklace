@@ -84,11 +84,6 @@ void setRingColor(uint16_t hue, uint8_t sat, uint8_t val){
 	delay(DELAYVAL);
 }
 
-// get the hsv, change the value of the val and convert it to rgb to call pixels.Color
-// https://www.rapidtables.com/convert/color/rgb-to-hsv.html
-
-// adafruit docs https://github.com/adafruit/Adafruit_NeoPixel/blob/master/Adafruit_NeoPixel.h
-
 uint32_t fromHSVtoRGB(uint16_t hue, uint8_t sat, uint8_t val) {
 	double c = (val/100.0) * (sat/100.0);
 	double x = c * (1 - abs((hue / 60) % 2 + (hue / 60.0 - (int)(hue/60)) - 1));
