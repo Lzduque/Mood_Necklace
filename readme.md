@@ -16,5 +16,8 @@ https://www.philophrosyne.com/blogs/jewelry-guide/what-do-the-colors-of-a-mood-r
 - HSV cnverter to RGB formula:
 https://www.rapidtables.com/convert/color/hsv-to-rgb.html
 
-- Adafruit docs:
+- Adafruit NeoPixel docs:
 https://github.com/adafruit/Adafruit_NeoPixel/blob/master/Adafruit_NeoPixel.h
+
+- Adafruit docs for DotStar on Gemma:
+https://github.com/adafruit/Adafruit_DotStar/blob/master/Adafruit_DotStar.cpp
