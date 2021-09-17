@@ -1,16 +1,30 @@
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_DotStar.h>
 
-#define LED_PIN	1
-#define TEMP_SENSOR_PIN	A1
 #define NUMPIXELS 12
 #define BRIGHTNESS 12
+
+enum pins {
+	LED_PIN = 1, TEMP_SENSOR_PIN = A1, PHOTOCELL_PIN = A2
+};
+enum brightness_range
+{
+	BRIGHTNESS_MIN = 40,
+	BRIGHTNESS_MAX = 100
+};
+
+enum photocell_range
+{
+	PHOTOCELL_MIN = 60,
+	PHOTOCELL_MAX = 400
+};
 
 Adafruit_NeoPixel ring(NUMPIXELS, LED_PIN, NEO_GRBW + NEO_KHZ800);
 Adafruit_DotStar dot(1, 3, 4, DOTSTAR_BGR);
 
 void setup() {
 	pinMode(TEMP_SENSOR_PIN, INPUT);
+  	pinMode(PHOTOCELL_PIN, INPUT);
 
 	ring.begin();
 	ring.setBrightness(BRIGHTNESS);
@@ -24,7 +38,10 @@ void loop(){
 	int temp_sensor = analogRead(TEMP_SENSOR_PIN);
 	int milliVolts = (temp_sensor) * (3300 / 1024);
 	int temperature = ( milliVolts - 500 ) / 10;
-	Serial.println(temperature);
+	int photocell = analogRead(PHOTOCELL_PIN);
+  	Serial.println(photocell);
+  	int brightness = constrain(map(photocell, PHOTOCELL_MIN, PHOTOCELL_MAX, BRIGHTNESS_MIN, BRIGHTNESS_MAX), BRIGHTNESS_MIN, BRIGHTNESS_MAX);
+  	Serial.println(brightness);
 
 	switch (temperature)
 	{
@@ -32,61 +49,61 @@ void loop(){
 		setRingColor(0, 0, 0); // BLACK
 		break;
 	case 20:
-		setRingColor(0, 95, 60); // RED
+		setRingColor(0, 95, brightness); // RED
 		break;
 	case 21:
 	case 22:
-		setRingColor(23, 95, 60); // ORANGE
+		setRingColor(23, 95, brightness); // ORANGE
 		break;
 	case 23:
-		setRingColor(51, 95, 60); // YELLOW
+		setRingColor(51, 95, brightness); // YELLOW
 		break;
 	case 24:
 	case 25:
-		setRingColor(76, 95, 60); // LIME-GREEN
+		setRingColor(76, 95, brightness); // LIME-GREEN
 		break;
 	case 26:
-		setRingColor(109, 95, 60); // GREEN
+		setRingColor(109, 95, brightness); // GREEN
 		break;
 	case 27:
-		setRingColor(139, 95, 60); // GREEN-BLUE
+		setRingColor(139, 95, brightness); // GREEN-BLUE
 		break;
 	case 28:
-		setRingColor(162, 95, 60); // TURQUOISE
+		setRingColor(162, 95, brightness); // TURQUOISE
 		break;
 	case 29:
-		setRingColor(182, 95, 60); // CYAN
+		setRingColor(182, 95, brightness); // CYAN
 		break;
 	case 30:
-		setRingColor(222, 95, 60); // BLUE
+		setRingColor(222, 95, brightness); // BLUE
 		break;
 	case 31:
-		setRingColor(265, 95, 60); // PURPLE
+		setRingColor(265, 95, brightness); // PURPLE
 		break;
 	case 32:
-		setRingColor(306, 95, 60); // VIOLET
+		setRingColor(306, 95, brightness); // VIOLET
 		break;
 	case 33:
-		setRingColor(336, 95, 60); // PINK
+		setRingColor(336, 95, brightness); // PINK
 		break;
 	default:
-		setRingColor(0, 0, 60); // WHITE
+		setRingColor(0, 0, brightness); // WHITE
 	}
 };
 
 void setRingColor(uint16_t hue, uint8_t sat, uint8_t val){
 	int j;
-	for (j = 0; j <= 36; j += 4)
+	for (j = val; j >= val/2; j -= 4)
 	{
-		ring.fill(fromHSVtoRGB(hue, sat, max(val - j, 0)));
-		dot.fill(fromHSVtoRGB(hue, sat, max(val - j, 0)));
+		ring.fill(fromHSVtoRGB(hue, sat, j));
+		dot.fill(fromHSVtoRGB(hue, sat, j));
 		ring.show();
 		dot.show();
 		delay(25);
 	}
-	for (; j >= 0; j -= 4) {
-		ring.fill(fromHSVtoRGB(hue, sat, max(val - j, 0)));
-		dot.fill(fromHSVtoRGB(hue, sat, max(val - j, 0)));
+	for (; j <= val; j += 4) {
+		ring.fill(fromHSVtoRGB(hue, sat, j));
+		dot.fill(fromHSVtoRGB(hue, sat, j));
 		ring.show();
 		dot.show();
 		delay(25);
@@ -94,30 +111,12 @@ void setRingColor(uint16_t hue, uint8_t sat, uint8_t val){
 }
 
 uint32_t fromHSVtoRGB(uint16_t hue, uint8_t sat, uint8_t val) {
-	Serial.print("hue ");
-	Serial.println(hue);
-	Serial.print("sat ");
-	Serial.println(sat);
-	Serial.print("val ");
-	Serial.println(val);
 	double c = (val/100.0) * (sat/100.0);
-	// double c = 0.57;
 	double x = c * (1 - abs((hue / 60) % 2 + (hue / 60.0 - (int)(hue/60)) - 1));
-	// double x = c * (1 - abs(0 % 2 + 0.38333 - 1));
-	// double x = c * (1 - 0.616666);
-	// double x = 0.2185;
 	double m = (val/100.0) - c;
-	// double m = 0.6 - c;
-	// double m = 0.03;
 	double r;
 	double g;
 	double b;
-	Serial.print("c ");
-	Serial.println(c);
-	Serial.print("x ");
-	Serial.println(x);
-	Serial.print("m ");
-	Serial.println(m);
 	
 	if (0 <= hue && hue < 60) {
 		r = c;
@@ -151,12 +150,6 @@ uint32_t fromHSVtoRGB(uint16_t hue, uint8_t sat, uint8_t val) {
 	double rfinal = (uint16_t)((r + m) * 255);
 	double gfinal = (uint16_t)((g+m)*255);
 	double bfinal = (uint16_t)((b+m)*255);
-	Serial.print("rfinal ");
-	Serial.println(rfinal);
-	Serial.print("gfinal ");
-	Serial.println(gfinal);
-	Serial.print("bfinal ");
-	Serial.println(bfinal);
 
 	return ring.Color(rfinal, gfinal, bfinal);
 }
