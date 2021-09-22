@@ -41,50 +41,55 @@ void loop(){
 	int photocell = analogRead(PHOTOCELL_PIN);
   	Serial.println(photocell);
   	int brightness = constrain(map(photocell, PHOTOCELL_MIN, PHOTOCELL_MAX, BRIGHTNESS_MIN, BRIGHTNESS_MAX), BRIGHTNESS_MIN, BRIGHTNESS_MAX);
-  	Serial.println(brightness);
+  	// Serial.print("brightness: ");
+  	// Serial.println(brightness);
 
 	switch (temperature)
 	{
 	case 19:
-		setRingColor(0, 0, 0); // BLACK
+		setRingColor(336, 95, brightness); // PINK
 		break;
 	case 20:
-		setRingColor(0, 95, brightness); // RED
+		setRingColor(312, 95, brightness); // HOT PINK
 		break;
 	case 21:
+		setRingColor(288, 95, brightness); // VIOLET
+		break;
 	case 22:
-		setRingColor(23, 95, brightness); // ORANGE
+		setRingColor(264, 95, brightness); // PURPLE
 		break;
 	case 23:
-		setRingColor(51, 95, brightness); // YELLOW
+		setRingColor(240, 95, brightness); // BLUE
 		break;
 	case 24:
+		setRingColor(216, 95, brightness); // PERWINKLE
+		break;
 	case 25:
-		setRingColor(76, 95, brightness); // LIME-GREEN
+		setRingColor(192, 95, brightness); // TURQUOISE
 		break;
 	case 26:
-		setRingColor(109, 95, brightness); // GREEN
+		setRingColor(168, 95, brightness); // SEAFOAM
 		break;
 	case 27:
-		setRingColor(139, 95, brightness); // GREEN-BLUE
+		setRingColor(144, 95, brightness); // IRISH GREEN
 		break;
 	case 28:
-		setRingColor(162, 95, brightness); // TURQUOISE
+		setRingColor(120, 95, brightness); // GREEN
 		break;
 	case 29:
-		setRingColor(182, 95, brightness); // CYAN
+		setRingColor(96, 95, brightness); // YELLOW-GREEN
 		break;
 	case 30:
-		setRingColor(222, 95, brightness); // BLUE
+		setRingColor(72, 95, brightness); // CHARTREUSE
 		break;
 	case 31:
-		setRingColor(265, 95, brightness); // PURPLE
+		setRingColor(48, 95, brightness); // YELLOW
 		break;
 	case 32:
-		setRingColor(306, 95, brightness); // VIOLET
+		setRingColor(24, 95, brightness); // ORANGE
 		break;
 	case 33:
-		setRingColor(336, 95, brightness); // PINK
+		setRingColor(0, 95, brightness); // RED
 		break;
 	default:
 		setRingColor(0, 0, brightness); // WHITE
