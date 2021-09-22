@@ -9,14 +9,14 @@ enum pins {
 };
 enum brightness_range
 {
-	BRIGHTNESS_MIN = 40,
+	BRIGHTNESS_MIN = 20,
 	BRIGHTNESS_MAX = 100
 };
 
 enum photocell_range
 {
-	PHOTOCELL_MIN = 60,
-	PHOTOCELL_MAX = 400
+	PHOTOCELL_MIN = 100,
+	PHOTOCELL_MAX = 500
 };
 
 Adafruit_NeoPixel ring(NUMPIXELS, LED_PIN, NEO_GRBW + NEO_KHZ800);
@@ -98,7 +98,7 @@ void loop(){
 
 void setRingColor(uint16_t hue, uint8_t sat, uint8_t val){
 	int j;
-	for (j = val; j >= val/2; j -= 4)
+	for (j = val; j >= val/2; j -= (val/2 /4))
 	{
 		ring.fill(fromHSVtoRGB(hue, sat, j));
 		dot.fill(fromHSVtoRGB(hue, sat, j));
@@ -106,7 +106,7 @@ void setRingColor(uint16_t hue, uint8_t sat, uint8_t val){
 		dot.show();
 		delay(25);
 	}
-	for (; j <= val; j += 4) {
+	for (; j <= val; j += (val/2 /4)) {
 		ring.fill(fromHSVtoRGB(hue, sat, j));
 		dot.fill(fromHSVtoRGB(hue, sat, j));
 		ring.show();
